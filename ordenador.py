@@ -11,15 +11,25 @@ Mismo diseno que en calculadora_matriz.py:
   - set_datos(lista) carga la lista a ordenar (si recibe parametro, pero
     no es un "metodo de operacion").
   - Los metodos de ordenamiento no reciben parametros ni retornan nada;
-    trabajan sobre una copia de self.datos y guardan el resultado en
-    self.resultado.
+    trabajan sobre self.resultado (una copia de self.datos) y guardan
+    ahi el resultado.
   - get_resultado() entrega el resultado al main.
 
-Nota sobre mergesort: al ser un algoritmo recursivo, internamente usa
-funciones auxiliares (_mezclar, _mergesort_recursivo) que si reciben
-parametros (los indices del segmento a ordenar); esto es una
-implementacion interna de apoyo, no el metodo publico que llama el main
-(que sigue siendo mergesort(), sin parametros).
+Nota sobre mergesort: la guia de laboratorio da el pseudocodigo de
+mergesort(A, l, r) y merge(A, l, m, r) trabajando in-place sobre indices
+(l, m, r) y un arreglo temporal de tamano r-l+1, en vez de dividir la
+lista con slicing y devolver listas nuevas. Aqui se implementa exactamente
+esa version (mergesort(self) sigue sin parametros como exige el
+enunciado, y llama a los metodos privados _mergesort(l, r) / _merge(l, m,
+r) que reproducen el pseudocodigo de la guia).
+
+Al transcribir el pseudocodigo de las diapositivas se cuelan un par de
+errores de tipeo tipicos de OCR/copiado (por ejemplo "while i < m and j <
+r" en vez de "while i <= m and j <= r", y el ultimo while le suma a "i"
+en vez de a "j"). Si se copian tal cual, el algoritmo pierde el ultimo
+elemento de cada mitad. Aqui se corrigieron esos limites para que el
+algoritmo funcione, conservando exactamente la misma estructura, nombres
+de variables (l, m, r, i, j, k, temp) y logica de la guia.
 """
 
 
@@ -69,7 +79,13 @@ class Ordenador:
         self.resultado = lista
 
     def mergesort(self):
-        self.resultado = self._mergesort_recursivo(list(self.datos))
+        """
+        Punto de entrada sin parametros (como exige el enunciado).
+        Copia self.datos en self.resultado y ordena esa copia IN-PLACE
+        llamando a _mergesort(l, r), igual que en la guia.
+        """
+        self.resultado = list(self.datos)
+        self._mergesort(0, len(self.resultado) - 1)
 
     def sort_python(self):
         lista = list(self.datos)
@@ -77,30 +93,52 @@ class Ordenador:
         self.resultado = lista
 
     # ------------------------------------------------------------------
-    # Funciones auxiliares privadas para mergesort (uso interno).
+    # mergesort(A, l, r) / merge(A, l, m, r) tal como estan en la guia:
+    # trabajan por indices sobre self.resultado y usan un arreglo
+    # temporal, en vez de dividir la lista con slicing.
     # ------------------------------------------------------------------
-    def _mergesort_recursivo(self, lista):
-        if len(lista) <= 1:
-            return lista
+    def _mergesort(self, l, r):
+        if r > l:
+            m = l + (r - l) // 2
+            self._mergesort(l, m)          # ordenar la primera mitad
+            self._mergesort(m + 1, r)      # ordenar la segunda mitad
+            self._merge(l, m, r)           # mezclar las dos mitades ordenadas
 
-        medio = len(lista) // 2
-        izquierda = self._mergesort_recursivo(lista[:medio])
-        derecha = self._mergesort_recursivo(lista[medio:])
-        return self._mezclar(izquierda, derecha)
+    def _merge(self, l, m, r):
+        # Arreglo temporal de tamano r - l + 1 (igual que en la guia)
+        temp = [0] * (r - l + 1)
 
-    def _mezclar(self, izquierda, derecha):
-        resultado = []
-        i = j = 0
-        while i < len(izquierda) and j < len(derecha):
-            if izquierda[i] <= derecha[j]:
-                resultado.append(izquierda[i])
+        i = l          # indice para la primera mitad: A[l .. m]
+        j = m + 1      # indice para la segunda mitad: A[m+1 .. r]
+        k = 0          # indice para el arreglo temporal
+
+        # Recorrer ambas mitades y en cada iteracion agregar el menor de
+        # ambos elementos a temp.
+        while i <= m and j <= r:
+            if self.resultado[i] <= self.resultado[j]:
+                temp[k] = self.resultado[i]
+                k += 1
                 i += 1
             else:
-                resultado.append(derecha[j])
+                temp[k] = self.resultado[j]
+                k += 1
                 j += 1
-        resultado.extend(izquierda[i:])
-        resultado.extend(derecha[j:])
-        return resultado
+
+        # Agregar los elementos que sobraron de la primera mitad
+        while i <= m:
+            temp[k] = self.resultado[i]
+            k += 1
+            i += 1
+
+        # Agregar los elementos que sobraron de la segunda mitad
+        while j <= r:
+            temp[k] = self.resultado[j]
+            k += 1
+            j += 1
+
+        # Copiar temp de vuelta al intervalo original
+        for indice in range(l, r + 1):
+            self.resultado[indice] = temp[indice - l]
 
     # ------------------------------------------------------------------
     # Metodo get: entrega el resultado calculado al main.
