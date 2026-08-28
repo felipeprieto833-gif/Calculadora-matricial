@@ -1,20 +1,3 @@
-"""
-main.py
-
-Programa principal. Muestra un menu con las dos practicas del laboratorio:
-
-    1. Calculadora matricial (punto 3.1)
-    2. Ordenamiento de listas (punto 3.2)
-    0. Salir
-
-Cada opcion abre un SUBMENU propio. El programa NUNCA se cierra solo al
-terminar una operacion: siempre vuelve al submenu (y de ahi al menu
-principal) hasta que el usuario elige salir explicitamente.
-
-Todas las llamadas a las clases se hacen sobre OBJETOS (no se usan
-llamados estaticos), tal como pide la guia de laboratorio.
-"""
-
 from calculadora_matriz import CalculadoraMatriz
 from ordenador import Ordenador
 from utilidades import (
@@ -29,9 +12,6 @@ from utilidades import (
 )
 
 
-# ----------------------------------------------------------------------
-# Punto 3.1: Calculadora matricial
-# ----------------------------------------------------------------------
 def menu_calculadora_matricial():
     calculadora = CalculadoraMatriz()
 
@@ -107,9 +87,6 @@ def menu_calculadora_matricial():
         pausar()
 
 
-# ----------------------------------------------------------------------
-# Punto 3.2: Ordenamiento de listas
-# ----------------------------------------------------------------------
 def menu_ordenamiento():
     ordenador = Ordenador()
 
@@ -192,9 +169,6 @@ def menu_ordenamiento():
         pausar()
 
 
-# ----------------------------------------------------------------------
-# Menu principal
-# ----------------------------------------------------------------------
 def main():
     opciones = {
         "1": "Calculadora matricial (suma, producto, inversa, matriz x vector)",

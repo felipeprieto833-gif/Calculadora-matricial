@@ -1,16 +1,7 @@
-"""
-utilidades.py
-
-Funciones de apoyo para leer datos por consola y mostrarlos en pantalla.
-No es una clase (son funciones sueltas), asi que no rompe la regla de
-"una sola clase por archivo": este archivo tiene cero clases.
-"""
-
 import random
 
 
 def leer_entero(mensaje):
-    """Pide un entero por consola hasta que el usuario ingrese uno valido."""
     while True:
         try:
             return int(input(mensaje))
@@ -19,7 +10,6 @@ def leer_entero(mensaje):
 
 
 def leer_flotante(mensaje):
-    """Pide un flotante por consola hasta que el usuario ingrese uno valido."""
     while True:
         try:
             return float(input(mensaje))
@@ -28,10 +18,6 @@ def leer_flotante(mensaje):
 
 
 def leer_matriz(nombre, filas=None, columnas=None):
-    """
-    Pide al usuario, elemento por elemento, los valores de una matriz.
-    Si no se indican filas/columnas, tambien se piden por consola.
-    """
     if filas is None:
         filas = leer_entero(f"Numero de filas de la matriz {nombre}: ")
     if columnas is None:
@@ -49,7 +35,6 @@ def leer_matriz(nombre, filas=None, columnas=None):
 
 
 def leer_vector(nombre, tamano=None):
-    """Pide al usuario, posicion por posicion, los valores de un vector."""
     if tamano is None:
         tamano = leer_entero(f"Tamano del vector {nombre}: ")
 
@@ -62,7 +47,6 @@ def leer_vector(nombre, tamano=None):
 
 
 def generar_lista_aleatoria(cantidad, minimo=0.0, maximo=100.0):
-    """Genera una lista de 'cantidad' numeros flotantes aleatorios."""
     return [round(random.uniform(minimo, maximo), 2) for _ in range(cantidad)]
 
 

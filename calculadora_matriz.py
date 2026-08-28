@@ -1,39 +1,12 @@
-"""
-calculadora_matriz.py
-
-Clase CalculadoraMatriz: implementa las operaciones matematicas del
-punto 3.1 del laboratorio (suma, producto, inversa y producto matriz-vector)
-usando UNICAMENTE listas de Python (no se usa numpy).
-
-Reglas de diseno pedidas en la guia:
-  - La clase tiene un metodo constructor (__init__) que inicializa los
-    datos miembro.
-  - Los METODOS DE OPERACION (sumar, multiplicar, invertir,
-    multiplicar_por_vector) no reciben parametros ni retornan nada: leen
-    el estado interno del objeto (self.matriz_a, self.matriz_b,
-    self.vector) y guardan el resultado en self.resultado.
-  - Para entregar el resultado al main se usa un metodo get
-    (get_resultado()), tal como pide el enunciado.
-  - Los "set_..." SI reciben un parametro: son la forma de cargar los
-    datos de entrada en el objeto antes de pedirle que opere (equivalen
-    a reconfigurar el estado interno, no son los "metodos de operacion"
-    que el enunciado restringe).
-"""
-
-
 class CalculadoraMatriz:
 
     def __init__(self, matriz_a=None, matriz_b=None, vector=None):
-        """Constructor: inicializa los datos miembro de la clase."""
         self.matriz_a = matriz_a
         self.matriz_b = matriz_b
         self.vector = vector
         self.resultado = None
         self.error = None
 
-    # ------------------------------------------------------------------
-    # Metodos "set": cargan los datos de entrada en el objeto.
-    # ------------------------------------------------------------------
     def set_matriz_a(self, matriz):
         self.matriz_a = matriz
 
@@ -46,9 +19,6 @@ class CalculadoraMatriz:
     def inicializar_matriz_en_ceros(self, filas, columnas):
         return [[0] * columnas for _ in range(filas)]
 
-    # ------------------------------------------------------------------
-    # Metodos de operacion: sin parametros, sin retorno.
-    # ------------------------------------------------------------------
     def sumar(self):
         self.error = None
         self.resultado = None
@@ -68,7 +38,6 @@ class CalculadoraMatriz:
         self.resultado = suma
 
     def multiplicar(self):
-        """Producto matriz_a x matriz_b (columnas de A = filas de B)."""
         self.error = None
         self.resultado = None
 
@@ -95,7 +64,6 @@ class CalculadoraMatriz:
         self.resultado = producto
 
     def multiplicar_por_vector(self):
-        """Producto de matriz_a por vector (numero de columnas = tamano del vector)."""
         self.error = None
         self.resultado = None
 
@@ -119,16 +87,6 @@ class CalculadoraMatriz:
         self.resultado = resultado
 
     def invertir(self):
-        """
-        Inversa de matriz_a por el metodo de determinante y matriz adjunta:
-
-            A^-1 = (1 / det(A)) * adj(A)
-
-        donde adj(A) es la TRANSPUESTA de la matriz de cofactores de A.
-        Funciona para matrices cuadradas de cualquier tamano. No usa numpy:
-        solo listas y aritmetica basica (el determinante se calcula de
-        forma recursiva, expandiendo por la primera fila).
-        """
         self.error = None
         self.resultado = None
 
@@ -150,14 +108,7 @@ class CalculadoraMatriz:
             [adjunta[i][j] / determinante for j in range(n)] for i in range(n)
         ]
 
-    # ------------------------------------------------------------------
-    # Funciones auxiliares privadas para la inversa (determinante,
-    # menores, cofactores y transpuesta). Se usan solo internamente desde
-    # invertir(); por eso si reciben parametros: son la implementacion de
-    # apoyo, no el metodo publico de operacion que llama el main.
-    # ------------------------------------------------------------------
     def _menor(self, matriz, fila_excluida, columna_excluida):
-        """Submatriz que resulta de quitar una fila y una columna."""
         return [
             [valor for j, valor in enumerate(fila) if j != columna_excluida]
             for i, fila in enumerate(matriz)
@@ -165,7 +116,6 @@ class CalculadoraMatriz:
         ]
 
     def _determinante(self, matriz):
-        """Determinante calculado de forma recursiva (expansion por cofactores)."""
         n = len(matriz)
 
         if n == 1:
@@ -182,7 +132,6 @@ class CalculadoraMatriz:
         return determinante
 
     def _matriz_cofactores(self, matriz):
-        """Matriz de cofactores: cofactor[i][j] = (-1)^(i+j) * det(menor_ij)."""
         n = len(matriz)
         cofactores = [[0] * n for _ in range(n)]
         for i in range(n):
@@ -193,14 +142,10 @@ class CalculadoraMatriz:
         return cofactores
 
     def _transponer(self, matriz):
-        """Transpuesta de una matriz cuadrada (o rectangular en general)."""
         filas = len(matriz)
         columnas = len(matriz[0])
         return [[matriz[i][j] for i in range(filas)] for j in range(columnas)]
 
-    # ------------------------------------------------------------------
-    # Metodo get: entrega el resultado calculado al main.
-    # ------------------------------------------------------------------
     def get_resultado(self):
         return self.resultado
 
