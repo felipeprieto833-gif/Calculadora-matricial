@@ -155,7 +155,7 @@ def menu_ordenamiento():
             mostrar_lista(ordenador.get_resultado())
 
             ordenador.seleccion()
-            print("Seleccion:  ", end="")
+            print("Seleccion:  ", end="     ")
             mostrar_lista(ordenador.get_resultado())
 
             ordenador.mergesort()
