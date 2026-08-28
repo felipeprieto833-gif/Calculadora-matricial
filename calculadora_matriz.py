@@ -109,11 +109,12 @@ class CalculadoraMatriz:
         ]
 
     def _menor(self, matriz, fila_excluida, columna_excluida):
-        return [
+        resultado =  [
             [valor for j, valor in enumerate(fila) if j != columna_excluida]
             for i, fila in enumerate(matriz)
             if i != fila_excluida
         ]
+        return resultado
 
     def _determinante(self, matriz):
         n = len(matriz)
